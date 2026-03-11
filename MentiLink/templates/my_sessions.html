@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}My Sessions - MentiLink{% endblock %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-header">
+        <h2 class="mb-0"><i class="fas fa-history me-2"></i>{{ page_title }}</h2>
+    </div>
+    <div class="card-body">
+        {% if sessions %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Title</th>
+                            {% if current_user.role == 'mentor' %}
+                                <th>Student</th>
+                            {% else %}
+                                <th>Mentor</th>
+                            {% endif %}
+                            <th>Date & Time</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for session in sessions %}
+                            <tr>
+                                <td>{{ session.title }}</td>
+                                <td>
+                                    {% if current_user.role == 'mentor' %}
+                                        <a href="{{ url_for('auth.view_profile', user_id=session.student.id) }}" class="text-decoration-none">
+                                            {{ session.student.full_name }}
+                                        </a>
+                                    {% else %}
+                                        <a href="{{ url_for('auth.view_profile', user_id=session.mentor.id) }}" class="text-decoration-none">
+                                            {{ session.mentor.full_name }}
+                                        </a>
+                                    {% endif %}
+                                </td>
+                                <td>{{ session.slot.start_time.strftime('%Y-%m-%d %H:%M') }} (IST)</td>
+                                <td>
+                                    {% if session.status == 'scheduled' and session.is_past %}
+                                        <span class="badge bg-secondary">Ended (Awaiting Summary)</span>
+                                    {% elif session.status == 'scheduled' %}
+                                        <span class="badge bg-primary">Scheduled</span>
+                                    {% elif session.status == 'completed' %}
+                                        <span class="badge bg-success">Completed</span>
+                                    {% elif session.status == 'cancelled' %}
+                                        <span class="badge bg-danger">Cancelled</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    <a href="{{ url_for('sessions.view_session', session_id=session.id) }}" class="btn btn-sm btn-outline-primary">
+                                        View Details
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-muted">You don't have any sessions yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

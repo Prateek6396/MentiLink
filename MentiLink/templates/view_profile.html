@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}{{ user.full_name }}'s Profile{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header">
+                <h2 class="mb-0">
+                    {% if user.role == 'mentor' %}
+                        <i class="fas fa-chalkboard-teacher me-2"></i>Mentor Profile
+                    {% else %}
+                        <i class="fas fa-user-graduate me-2"></i>Student Profile
+                    {% endif %}
+                </h2>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-4">Full Name</dt>
+                    <dd class="col-sm-8">{{ user.full_name }}</dd>
+
+                    <dt class="col-sm-4">Email Address</dt>
+                    <dd class="col-sm-8">{{ user.email }}</dd>
+
+                    {% if user.phone %}
+                    <dt class="col-sm-4">Phone Number</dt>
+                    <dd class="col-sm-8">{{ user.phone }}</dd>
+                    {% endif %}
+                    
+                    <hr class="my-3">
+
+                    {% if user.qualification %}
+                    <dt class="col-sm-4">Highest Qualification</dt>
+                    <dd class="col-sm-8">{{ user.qualification }}</dd>
+                    {% endif %}
+
+                    {% if user.field_of_study %}
+                    <dt class="col-sm-4">Field of Study</dt>
+                    <dd class="col-sm-8">{{ user.field_of_study }}</dd>
+                    {% endif %}
+
+                    {% if user.role == 'mentor' and user.expertise %}
+                    <dt class="col-sm-4">Areas of Expertise</dt>
+                    <dd class="col-sm-8">{{ user.expertise }}</dd>
+
+                    <dt class="col-sm-4">Average Rating</dt>
+                    <dd class="col-sm-8">
+                        {% if user.average_rating > 0 %}
+                            <span class="text-warning">
+                                <i class="fas fa-star"></i> {{ user.average_rating }} / 5.0
+                            </span>
+                        {% else %}
+                            <span>No ratings yet</span>
+                        {% endif %}
+                    </dd>
+                    {% endif %}
+                    
+                    <hr class="my-3">
+
+                    {% if user.bio %}
+                    <dt class="col-sm-4">Bio</dt>
+                    <dd class="col-sm-8">{{ user.bio }}</dd>
+                    {% endif %}
+
+                    {% if user.role == 'student' and user.goals %}
+                        <hr class="my-3">
+                        <h5>Learning Goals</h5>
+                        <ul class="list-group list-group-flush">
+                            {% for goal in user.goals %}
+                                <li class="list-group-item">
+                                    {% if goal.status == 'Completed' %}
+                                        <i class="fas fa-check-circle text-success me-2"></i><s>{{ goal.description }}</s>
+                                    {% else %}
+                                        <i class="fas fa-bullseye text-primary me-2"></i>{{ goal.description }}
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </dl>
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('messages.conversation', recipient_id=user.id) }}" class="btn btn-primary">
+                        <i class="fas fa-comments me-1"></i> Send Message
+                    </a>
+                    <a href="javascript:history.back()" class="btn btn-outline-secondary">Go Back</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

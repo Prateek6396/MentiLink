@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}My Notifications - MentiLink{% endblock %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-header">
+        <h2><i class="fas fa-bell me-2"></i>My Notifications</h2>
+    </div>
+    <div class="card-body">
+        {% if notifications %}
+            <ul class="list-group list-group-flush">
+                {% for notification in notifications %}
+                    <li class="list-group-item">
+                        <a href="{{ url_for('notifications.go_to_notification', notification_id=notification.id) }}" class="text-decoration-none text-dark d-block">
+                            <p class="mb-1">{{ notification.message }}</p>
+                            <small class="text-muted">
+                                {{ notification.timestamp.strftime('%b %d, %Y at %I:%M %p') }}
+                            </small>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-muted">You have no notifications.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

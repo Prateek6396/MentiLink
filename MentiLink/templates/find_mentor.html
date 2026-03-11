@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Find a Mentor - MentiLink{% endblock %}
+
+{% block content %}
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <h2 class="card-title">Find the Right Mentor</h2>
+        <p class="card-text">Search by name, expertise, or keywords to find a mentor who fits your needs.</p>
+        <form method="GET" action="{{ url_for('mentors.find_mentor') }}">
+            <div class="input-group">
+                <input type="text" class="form-control" name="query" placeholder="Search for mentors..." value="{{ query or '' }}">
+                <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i> Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    {% if mentors %}
+        {% for mentor in mentors %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between">
+                        <h5 class="card-title">{{ mentor.full_name }}</h5>
+                        {% if mentor.average_rating > 0 %}
+                        <span class="text-warning">
+                            <i class="fas fa-star"></i> {{ mentor.average_rating }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ mentor.qualification or '' }} in {{ mentor.field_of_study or 'N/A' }}</h6>
+                    <p class="card-text">
+                        <small class="text-primary">{{ mentor.expertise or 'No expertise listed' }}</small>
+                    </p>
+                    <p class="card-text flex-grow-1">{{ mentor.bio | truncate(100) }}</p>
+                    <a href="{{ url_for('auth.view_profile', user_id=mentor.id) }}" class="btn btn-outline-primary mt-auto">View Profile</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-muted">No mentors found matching your criteria.</p>
+    {% endif %}
+</div>
+{% endblock %}

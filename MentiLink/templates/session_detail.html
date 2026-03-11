@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Session Details - MentiLink{% endblock %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h2 class="mb-0">
+            <i class="fas fa-clipboard-list me-2"></i>Session Details
+        </h2>
+        <div>
+            {% set start_time_ist = timezone('Asia/Kolkata').localize(session.slot.start_time) %}
+            {% if now >= (start_time_ist - timedelta(minutes=15)) and not session.is_past and session.status == 'scheduled' %}
+                <a href="{{ session.meeting_link }}" target="_blank" class="btn btn-success btn-sm me-2">
+                    <i class="fas fa-video me-2"></i>Start Session
+                </a>
+            {% endif %}
+
+            {% if current_user.role == 'mentor' %}
+                <a href="{{ url_for('messages.conversation', recipient_id=session.student.id) }}" class="btn btn-info btn-sm text-white me-2">
+                    <i class="fas fa-comments me-2"></i>Message Student
+                </a>
+            {% else %}
+                <a href="{{ url_for('messages.conversation', recipient_id=session.mentor.id) }}" class="btn btn-info btn-sm text-white me-2">
+                    <i class="fas fa-comments me-2"></i>Message Mentor
+                </a>
+            {% endif %}
+            
+            <a href="{{ url_for('sessions.export_session_pdf', session_id=session.id) }}" class="btn btn-light btn-sm me-2">
+                <i class="fas fa-file-pdf me-2"></i>Export PDF
+            </a>
+
+            {% if session.status == 'scheduled' %}
+            <form action="{{ url_for('sessions.cancel_session', session_id=session.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to cancel this session?');">
+                <button type="submit" class="btn btn-danger btn-sm">
+                    <i class="fas fa-times-circle me-2"></i>Cancel
+                </button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+    <div class="card-body">
+        <h4 class="card-title">{{ session.title }}</h4>
+        <hr>
+        <dl class="row">
+            <dt class="col-sm-3">Mentor</dt>
+            <dd class="col-sm-9">{{ session.mentor.full_name }}</dd>
+
+            <dt class="col-sm-3">Student</dt>
+            <dd class="col-sm-9">{{ session.student.full_name }}</dd>
+
+            <dt class="col-sm-3">Date & Time</dt>
+            <dd class="col-sm-9">{{ session.slot.start_time.strftime('%A, %B %d, %Y at %I:%M %p') }} (IST)</dd>
+
+            <dt class="col-sm-3">Status</dt>
+            <dd class="col-sm-9">
+                 {% if session.status == 'scheduled' and session.is_past %}
+                    <span class="badge bg-secondary">Ended (Awaiting Summary)</span>
+                {% elif session.status == 'scheduled' %}
+                    <span class="badge bg-primary">Scheduled</span>
+                {% elif session.status == 'completed' %}
+                    <span class="badge bg-success">Completed</span>
+                {% elif session.status == 'cancelled' %}
+                    <span class="badge bg-danger">Cancelled</span>
+                {% endif %}
+            </dd>
+        </dl>
+        
+        <div class="mt-4 p-3 bg-light rounded">
+            <h5><i class="fas fa-pen-alt me-2"></i>Mentor's Summary</h5>
+            {% if session.summary %}
+                <p class="text-muted mb-0">{{ session.summary }}</p>
+            {% elif current_user.role == 'mentor' and session.status == 'scheduled' and (session.is_active or session.is_past) %}
+                <form action="{{ url_for('sessions.complete_session', session_id=session.id) }}" method="POST">
+                    <div class="mb-3">
+                        <textarea class="form-control" name="summary" rows="4" placeholder="Add a summary of what was discussed..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success">Mark as Complete & Save Summary</button>
+                </form>
+            {% else %}
+                <p class="text-muted mb-0">The mentor has not added a summary yet.</p>
+            {% endif %}
+        </div>
+
+        <div class="mt-4 p-3 bg-light rounded">
+            <h5><i class="fas fa-star me-2"></i>Student's Feedback</h5>
+            {% if session.feedback %}
+                <div class="d-flex mb-2">
+                    {% for i in range(1, 6) %}
+                        <i class="fas fa-star {% if i <= session.rating %}text-warning{% endif %}"></i>
+                    {% endfor %}
+                </div>
+                <p class="text-muted mb-0">{{ session.feedback }}</p>
+            {% elif current_user.role == 'student' and session.status == 'completed' %}
+                 <form action="{{ url_for('sessions.add_feedback', session_id=session.id) }}" method="POST">
+                    <div class="mb-3">
+                        <label for="rating" class="form-label">Rating</label>
+                        <select class="form-select" name="rating" id="rating" required>
+                            <option value="5">5 - Excellent</option>
+                            <option value="4">4 - Good</option>
+                            <option value="3">3 - Average</option>
+                            <option value="2">2 - Poor</option>
+                            <option value="1">1 - Very Poor</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <textarea class="form-control" name="feedback" rows="4" placeholder="How was your session? Add your feedback here." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Feedback</button>
+                </form>
+            {% else %}
+                <p class="text-muted mb-0">Feedback can be added by the student after the session is completed by the mentor.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

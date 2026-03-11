@@ -1,0 +1,108 @@
+/* --- Custom Properties (CSS Variables) for Easy Theming --- */
+:root {
+    --primary-color: #4A90E2; /* A modern, friendly blue */
+    --primary-hover: #357ABD;
+    --secondary-color: #50E3C2; /* A vibrant accent color */
+    --light-gray: #f8f9fa;
+    --medium-gray: #e9ecef;
+    --dark-gray: #343a40;
+    --text-color: #495057;
+    --border-radius: 0.5rem;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --transition-speed: 0.3s;
+}
+
+/* --- General Body and Typography Styles --- */
+body {
+    background-color: var(--light-gray);
+    color: var(--text-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex-grow: 1;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+}
+
+/* --- Navigation Bar --- */
+.navbar {
+    box-shadow: var(--box-shadow);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.nav-link {
+    transition: color var(--transition-speed);
+}
+
+.nav-link:hover {
+    color: var(--secondary-color) !important;
+}
+
+/* --- Hero Section on Homepage --- */
+.hero-section {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border-radius: var(--border-radius);
+    padding: 4rem 2rem;
+    color: white;
+}
+
+/* --- Modern Card Design --- */
+.card {
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.card-header {
+    background-color: transparent;
+    border-bottom: 1px solid var(--medium-gray);
+    font-weight: 600;
+    padding: 1rem 1.25rem;
+}
+
+/* --- Button Styles --- */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    transition: background-color var(--transition-speed);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+}
+
+/* --- Form Styles --- */
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(74, 144, 226, 0.25);
+}
+
+/* --- Dashboard Stat Cards --- */
+.dashboard-stat-card {
+    border-left: 5px solid var(--secondary-color);
+}
+
+/* --- Footer --- */
+.footer {
+    background-color: var(--dark-gray);
+    color: white;
+    padding: 2rem 0;
+}
+

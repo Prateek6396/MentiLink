@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Login - MentiLink{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow">
+            <div class="card-body p-4">
+
+                <ul class="nav nav-tabs nav-fill mb-4" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="student-tab" data-bs-toggle="tab" data-bs-target="#student-login" type="button" role="tab" aria-controls="student-login" aria-selected="true">
+                            <i class="fas fa-user-graduate me-2"></i>Student Login
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="mentor-tab" data-bs-toggle="tab" data-bs-target="#mentor-login" type="button" role="tab" aria-controls="mentor-login" aria-selected="false">
+                            <i class="fas fa-chalkboard-teacher me-2"></i>Mentor Login
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="student-login" role="tabpanel" aria-labelledby="student-tab">
+                        <h4 class="text-center mb-4">Welcome, Student!</h4>
+                        <form method="POST">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                                <label class="form-check-label" for="remember">Remember me</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Login</button>
+                        </form>
+                    </div>
+
+                    <div class="tab-pane fade" id="mentor-login" role="tabpanel" aria-labelledby="mentor-tab">
+                        <h4 class="text-center mb-4">Welcome, Mentor!</h4>
+                        <form method="POST">
+                            <div class="mb-3">
+                                <label for="email-mentor" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email-mentor" name="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password-mentor" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password-mentor" name="password" required>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="remember-mentor" name="remember">
+                                <label class="form-check-label" for="remember-mentor">Remember me</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Login</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <p>Don't have an account? <a href="{{ url_for('auth.register') }}">Register here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

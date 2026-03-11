@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile - MentiLink{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header">
+                <h2 class="mb-0"><i class="fas fa-user-edit me-2"></i>Edit Your Profile</h2>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="full_name" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="full_name" name="full_name" value="{{ current_user.full_name }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ current_user.email }}" readonly>
+                        <div class="form-text">Your email address cannot be changed.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone Number (Optional)</label>
+                        <input type="tel" class="form-control" id="phone" name="phone" value="{{ current_user.phone or '' }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="bio" class="form-label">Bio</label>
+                        <textarea class="form-control" id="bio" name="bio" rows="4" placeholder="Tell us a little about yourself...">{{ current_user.bio or '' }}</textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="qualification" class="form-label">Highest Qualification</label>
+                            <select class="form-select" id="qualification" name="qualification">
+                                <option value="" {% if not current_user.qualification %}selected{% endif %}>-- Select --</option>
+                                <option value="High School" {% if current_user.qualification == 'High School' %}selected{% endif %}>High School</option>
+                                <option value="Associate Degree" {% if current_user.qualification == 'Associate Degree' %}selected{% endif %}>Associate Degree</option>
+                                <option value="Bachelor's Degree" {% if current_user.qualification == "Bachelor's Degree" %}selected{% endif %}>Bachelor's Degree</option>
+                                <option value="Master's Degree" {% if current_user.qualification == "Master's Degree" %}selected{% endif %}>Master's Degree</option>
+                                <option value="Doctorate (PhD)" {% if current_user.qualification == 'Doctorate (PhD)' %}selected{% endif %}>Doctorate (PhD)</option>
+                                <option value="Other" {% if current_user.qualification == 'Other' %}selected{% endif %}>Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="field_of_study" class="form-label">Field of Study</label>
+                            <input type="text" class="form-control" id="field_of_study" name="field_of_study" value="{{ current_user.field_of_study or '' }}" placeholder="e.g., Computer Science">
+                        </div>
+                    </div>
+
+                    {% if current_user.role == 'mentor' %}
+                    <div class="mb-3">
+                        <label for="expertise" class="form-label">Areas of Expertise</label>
+                        <input type="text" class="form-control" id="expertise" name="expertise" value="{{ current_user.expertise or '' }}" placeholder="e.g., Web Development, Career Advice, Python">
+                        <div class="form-text">Separate different areas with a comma.</div>
+                    </div>
+                    {% endif %}
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
